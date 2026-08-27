@@ -1,7 +1,7 @@
 {
   "framework": "vite",
   "installCommand": "corepack enable && pnpm install --frozen-lockfile",
-  "buildCommand": "VITE_API_URL=https://cantina-backend-crediado.onrender.com/api pnpm --filter web build",
+  "buildCommand": "pnpm --filter web build",
   "outputDirectory": "web/dist",
   "rewrites": [
     {
