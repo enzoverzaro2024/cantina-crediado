@@ -142,20 +142,22 @@ export class ShareService {
       .offset(offset);
 
     const data = rawData.map((tx: any) => {
-      const isAdjustment = tx.identification_method === 'balance_adjustment' || (tx.identification_method === 'manual' && (tx.notes?.toLowerCase().includes('ajuste') || tx.notes?.toLowerCase().includes('saldo')));
-      const isCredit = isAdjustment && tx.notes?.toLowerCase().includes('crédito');
-      const isRechargePortal = tx.notes?.toLowerCase().includes('portal') || tx.notes?.toLowerCase().includes('recarga');
+      const notes = (tx.notes || '').toLowerCase();
+      const isAdjustment = tx.identification_method === 'balance_adjustment' || (tx.identification_method === 'manual' && (notes.includes('ajuste') || notes.includes('saldo')));
+      const isCredit = isAdjustment && notes.includes('crédito');
+      const isRechargePortal = notes.includes('portal') || notes.includes('recarga');
+      const isPaymentReceived = notes.includes('recebimento de pagamento');
 
       let type = 'purchase';
-      if (isCredit || isRechargePortal) type = 'credit';
-      if (isAdjustment && !isCredit && !isRechargePortal) type = 'debit';
+      if (isCredit || isRechargePortal || isPaymentReceived) type = 'credit';
+      if (isAdjustment && !isCredit && !isRechargePortal && !isPaymentReceived) type = 'debit';
 
       return {
         id: tx.id,
         amount: tx.final_amount,
         type,
         method: tx.payment_methods || (isAdjustment ? 'saldo' : 'outros'),
-        description: tx.notes || (type === 'purchase' ? 'Compra na Cantina' : 'Ajuste de Saldo'),
+        description: tx.notes || (type === 'purchase' ? 'Consumo na Cantina' : 'Ajuste de Saldo'),
         created_at: tx.created_at,
       };
     });
