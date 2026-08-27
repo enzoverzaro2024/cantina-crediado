@@ -32,7 +32,6 @@ export default function TrackPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [loadingTx, setLoadingTx] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
