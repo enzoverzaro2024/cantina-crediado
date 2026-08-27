@@ -1,0 +1,357 @@
+/* ===== Track Page (Public) ===== */
+.track-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  color: #e2e8f0;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Header */
+.track-header {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.track-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.track-header-logo {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+}
+
+.track-header-title h1 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.track-header-title p {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* Content */
+.track-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* Student Card */
+.track-student-card {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.track-student-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.track-student-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.track-student-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.track-student-info h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.track-student-meta {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.track-student-meta span {
+  font-size: 0.75rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Balance */
+.track-balance-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.track-balance-card {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.track-balance-card.main {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1));
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.track-balance-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.track-balance-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #22c55e;
+}
+
+.track-balance-value.expenses {
+  color: #f87171;
+}
+
+/* Expiration */
+.track-expires {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: rgba(99, 102, 241, 0.05);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  border-radius: 8px;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* Transactions */
+.track-transactions {
+  margin-top: 1rem;
+}
+
+.track-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.track-section-title h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.track-tx-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.track-tx-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.track-tx-item:hover {
+  background: rgba(30, 41, 59, 0.8);
+}
+
+.track-tx-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.track-tx-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.track-tx-icon.purchase {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.track-tx-icon.credit {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.track-tx-info p {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #e2e8f0;
+  margin: 0;
+}
+
+.track-tx-meta-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.track-method-badge {
+  font-size: 0.7rem;
+  padding: 0.1rem 0.45rem;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 4px;
+  color: #818cf8;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.track-tx-amount {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.track-tx-amount.purchase {
+  color: #f87171;
+}
+
+.track-tx-amount.credit {
+  color: #22c55e;
+}
+
+/* Empty */
+.track-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #64748b;
+}
+
+/* Error */
+.track-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  text-align: center;
+  color: #94a3b8;
+  padding: 2rem;
+}
+
+.track-error h2 {
+  margin-top: 1rem;
+  font-size: 1.3rem;
+  color: #f87171;
+}
+
+.track-error p {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  max-width: 400px;
+}
+
+/* Loading */
+.track-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  flex-direction: column;
+  gap: 1rem;
+  color: #94a3b8;
+}
+
+.track-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(99, 102, 241, 0.2);
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: trackSpin 0.8s linear infinite;
+}
+
+@keyframes trackSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .track-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .track-content {
+    padding: 1rem;
+  }
+
+  .track-student-card {
+    padding: 1rem;
+  }
+
+  .track-student-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 1rem;
+  }
+
+  .track-balance-section {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .track-balance-value {
+    font-size: 1.25rem;
+  }
+}

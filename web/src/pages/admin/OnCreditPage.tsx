@@ -128,6 +128,11 @@ export default function OnCreditPage() {
   });
   const [savingEditStudent, setSavingEditStudent] = useState(false);
 
+  // Share Link State
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareLink, setShareLink] = useState('');
+  const [generatingShare, setGeneratingShare] = useState<string | null>(null);
+
   // Manual Debt Launch State
   const [isManualModalOpen, setIsManualModalOpen] = useState(false);
   const [manualStudentSearch, setManualStudentSearch] = useState('');
@@ -829,6 +834,26 @@ export default function OnCreditPage() {
     }
   };
 
+  const handleGenerateShareLink = async (studentId: string, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setGeneratingShare(studentId);
+    try {
+      const { data } = await api.post('/share/generate', {
+        studentId,
+        expiresInDays: 30,
+      });
+      if (data.success) {
+        const fullUrl = `${window.location.origin}${data.data.shareUrl}`;
+        setShareLink(fullUrl);
+        setShowShareModal(true);
+      }
+    } catch (err: any) {
+      showToast(err.response?.data?.error?.message || 'Erro ao gerar link.', 'error');
+    } finally {
+      setGeneratingShare(null);
+    }
+  };
+
   const normalizeText = (str: string) =>
     (str || '')
       .toLowerCase()
@@ -1294,6 +1319,20 @@ export default function OnCreditPage() {
                           </div>
                         )}
                         <div style={{ display: 'flex', gap: '2px', marginLeft: '0.25rem' }}>
+                          <button
+                            type="button"
+                            className="btn btn-ghost btn-xs"
+                            style={{ padding: '4px', color: '#6366f1' }}
+                            title="Gerar link de acompanhamento para o responsável"
+                            onClick={(e) => handleGenerateShareLink(d.student_id, e)}
+                            disabled={generatingShare === d.student_id}
+                          >
+                            {generatingShare === d.student_id ? (
+                              <div style={{ width: 15, height: 15, border: '2px solid #6366f1', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+                            ) : (
+                              <Share2 size={15} />
+                            )}
+                          </button>
                           <button
                             type="button"
                             className="btn btn-ghost btn-xs"
@@ -2727,6 +2766,40 @@ export default function OnCreditPage() {
         allStudents={debts}
         onConfirmBatch={handleConfirmCameraBatch}
       />
+
+      {/* Share Link Modal */}
+      {showShareModal && (
+        <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => { setShowShareModal(false); setShareLink(''); }}>
+          <div style={{ background: 'var(--bg-card, #fff)', borderRadius: '16px', padding: '1.5rem', maxWidth: '440px', width: '90%', border: '1px solid var(--border-color, #e2e8f0)' }} onClick={e => e.stopPropagation()}>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: '0 0 1rem 0', fontSize: '1.1rem' }}>
+              <Share2 size={20} style={{ color: '#6366f1' }} />
+              Link de Acompanhamento
+            </h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+              Envie este link para o responsável acompanhar os gastos e saldo do aluno. Válido por 30 dias.
+            </p>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <input
+                type="text"
+                readOnly
+                value={shareLink}
+                style={{ flex: 1, padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color, #e2e8f0)', background: 'var(--bg-main, #f8fafc)', fontSize: '0.85rem' }}
+              />
+              <button
+                style={{ padding: '0.75rem 1rem', background: '#6366f1', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+                onClick={() => { navigator.clipboard.writeText(shareLink); showToast('Link copiado!', 'success'); }}
+              >
+                Copiar
+              </button>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+              <button className="btn btn-primary" onClick={() => { setShowShareModal(false); setShareLink(''); }}>
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

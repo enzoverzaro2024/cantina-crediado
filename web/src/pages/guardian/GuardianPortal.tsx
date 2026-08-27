@@ -2,7 +2,8 @@ import { useState, useEffect, useRef, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Coffee, LogOut, Users, Wallet, ArrowUpCircle,
-  ShoppingCart, Clock, RefreshCw, CreditCard, BookOpen, ShieldCheck
+  ShoppingCart, Clock, RefreshCw, CreditCard, BookOpen, ShieldCheck,
+  Share2, Link as LinkIcon
 } from 'lucide-react';
 import { api, authApi, dailyLimitsApi } from '../../services/api';
 import { useAuthStore } from '../../stores/authStore';
@@ -64,6 +65,11 @@ export default function GuardianPortal() {
   const [limitStudent, setLimitStudent] = useState<Student | null>(null);
   const [limitAmount, setLimitAmount] = useState('');
   const [savingLimit, setSavingLimit] = useState(false);
+
+  // Share link states
+  const [generatingLink, setGeneratingLink] = useState<string | null>(null);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareLink, setShareLink] = useState('');
 
   const presetAmounts = [10, 20, 30, 50, 75, 100];
 
@@ -208,6 +214,27 @@ export default function GuardianPortal() {
     if (rt) authApi.logout(rt);
     logout();
     navigate('/login');
+  };
+
+  const handleGenerateShareLink = async (studentId: string) => {
+    setGeneratingLink(studentId);
+    try {
+      const { data } = await api.post('/share/generate', {
+        studentId,
+        expiresInDays: 30,
+      });
+
+      if (data.success) {
+        const fullUrl = `${window.location.origin}${data.data.shareUrl}`;
+        setShareLink(fullUrl);
+        setShowShareModal(true);
+      }
+    } catch (err: any) {
+      console.error('Erro ao gerar link:', err);
+      alert(err.response?.data?.error?.message || 'Erro ao gerar link de compartilhamento.');
+    } finally {
+      setGeneratingLink(null);
+    }
   };
 
   const handleRecharge = async () => {
@@ -452,13 +479,37 @@ export default function GuardianPortal() {
 
             {/* Recharge */}
             {selectedStudent?.id === student.id && (
-              <button
-                className="gp-recharge-btn"
-                onClick={(e) => { e.stopPropagation(); setIsJointRecharge(false); setShowRechargeModal(true); }}
-              >
-                <Wallet size={18} />
-                Fazer Recarga
-              </button>
+              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+                <button
+                  className="gp-recharge-btn"
+                  style={{ flex: 1 }}
+                  onClick={(e) => { e.stopPropagation(); setIsJointRecharge(false); setShowRechargeModal(true); }}
+                >
+                  <Wallet size={18} />
+                  Fazer Recarga
+                </button>
+                <button
+                  className="gp-logout-btn"
+                  style={{
+                    borderColor: '#6366f1',
+                    color: '#818cf8',
+                    background: 'rgba(99, 102, 241, 0.1)',
+                    padding: '0.85rem 1rem',
+                    flexShrink: 0,
+                  }}
+                  disabled={generatingLink === student.id}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleGenerateShareLink(student.id);
+                  }}
+                >
+                  {generatingLink === student.id ? (
+                    <div className="gp-spinner" style={{ width: 18, height: 18, borderWidth: 2 }} />
+                  ) : (
+                    <Share2 size={18} />
+                  )}
+                </button>
+              </div>
             )}
           </div>
         ))}
@@ -970,6 +1021,75 @@ export default function GuardianPortal() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* Share Link Modal */}
+      {showShareModal && (
+        <div className="gp-modal-overlay" onClick={() => { setShowShareModal(false); setShareLink(''); }}>
+          <div className="gp-modal animate-scaleIn" style={{ maxWidth: '440px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="gp-modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <LinkIcon size={22} style={{ color: 'var(--color-primary, #6366f1)' }} />
+                <h3>Link de Acompanhamento</h3>
+              </div>
+              <button className="gp-modal-close" onClick={() => { setShowShareModal(false); setShareLink(''); }}>
+                ✕
+              </button>
+            </div>
+
+            <div style={{ padding: '1.25rem' }}>
+              <p style={{ fontSize: '0.875rem', color: '#94a3b8', marginBottom: '1.25rem', lineHeight: '1.5' }}>
+                Envie este link para o responsável acompanhar os gastos e saldo do aluno. O link é válido por <strong>30 dias</strong>.
+              </p>
+
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <input
+                  type="text"
+                  readOnly
+                  value={shareLink}
+                  style={{
+                    flex: 1,
+                    padding: '0.75rem',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(99,102,241,0.3)',
+                    background: 'rgba(15,23,42,0.5)',
+                    color: '#e2e8f0',
+                    fontSize: '0.85rem',
+                  }}
+                />
+                <button
+                  style={{
+                    padding: '0.75rem 1rem',
+                    background: '#6366f1',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                  }}
+                  onClick={() => {
+                    navigator.clipboard.writeText(shareLink);
+                    alert('Link copiado!');
+                  }}
+                >
+                  Copiar
+                </button>
+              </div>
+            </div>
+
+            <div className="gp-modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', padding: '1rem 1.25rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+              <button
+                type="button"
+                className="gp-confirm-btn"
+                onClick={() => { setShowShareModal(false); setShareLink(''); }}
+              >
+                Fechar
+              </button>
+            </div>
           </div>
         </div>
       )}
