@@ -45,6 +45,32 @@ async function bootstrap() {
     }
     // ───────────────────────────────────────────────────────────────────
 
+    // ── Hard guarantee: ensure share_tokens table exists ─────────────
+    try {
+      const hasShareTokens = await db.schema.hasTable('share_tokens');
+      if (!hasShareTokens) {
+        logger.info('➕ Creating missing share_tokens table...');
+        await db.schema.createTable('share_tokens', (table) => {
+          table.uuid('id').primary().defaultTo(db.raw('gen_random_uuid()'));
+          table.uuid('student_id').references('id').inTable('students').onDelete('CASCADE').notNullable();
+          table.uuid('created_by').references('id').inTable('users').onDelete('SET NULL');
+          table.string('token', 64).notNullable().unique();
+          table.boolean('is_active').defaultTo(true);
+          table.timestamp('expires_at', { useTz: true });
+          table.timestamp('created_at', { useTz: true }).defaultTo(db.fn.now());
+          table.timestamp('updated_at', { useTz: true }).defaultTo(db.fn.now());
+        });
+        await db.raw('CREATE INDEX idx_share_tokens_token ON share_tokens(token, is_active)');
+        await db.raw('CREATE INDEX idx_share_tokens_student ON share_tokens(student_id)');
+        logger.info('✅ share_tokens table created');
+      } else {
+        logger.info('✅ share_tokens table already exists');
+      }
+    } catch (tableErr) {
+      logger.warn({ tableErr }, '⚠️ Could not verify/create share_tokens table');
+    }
+    // ───────────────────────────────────────────────────────────────────
+
     const server = app.listen(config.port, () => {
       logger.info(`🚀 Cantina Escolar API running on port ${config.port}`);
       logger.info(`📋 Environment: ${config.env}`);
