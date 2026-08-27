@@ -138,7 +138,7 @@ export default function ProductsPage() {
 
         console.log('Uploading image for product:', productId);
         const token = localStorage.getItem('accessToken');
-        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+        const API_URL = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : 'https://cantina-backend-crediado.onrender.com/api');
         await axios.post(`${API_URL}/products/${productId}/image`, imgData, {
           headers: {
             'Authorization': `Bearer ${token}`

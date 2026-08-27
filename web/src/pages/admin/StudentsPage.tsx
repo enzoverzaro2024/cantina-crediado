@@ -222,7 +222,7 @@ export default function StudentsPage() {
 
     try {
       const token = localStorage.getItem('accessToken');
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      const API_URL = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : 'https://cantina-backend-crediado.onrender.com/api');
       const { data } = await axios.post(`${API_URL}/students/import`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`

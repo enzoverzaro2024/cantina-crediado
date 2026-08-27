@@ -1,9 +1,12 @@
 import axios from 'axios';
 
-const rawUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const rawUrl = import.meta.env.VITE_API_URL || (isLocalhost ? 'http://localhost:3000/api' : 'https://cantina-backend-crediado.onrender.com/api');
 const API_BASE = rawUrl.endsWith('/api') || rawUrl.endsWith('/api/')
   ? rawUrl
   : `${rawUrl.replace(/\/+$/, '')}/api`;
+
+export const API_BASE_URL = API_BASE;
 
 export const api = axios.create({
   baseURL: API_BASE,

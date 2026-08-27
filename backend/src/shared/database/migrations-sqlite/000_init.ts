@@ -254,11 +254,22 @@ export async function up(knex: Knex): Promise<void> {
     t.string('external_id', 100);
     t.timestamps(true, true);
   });
+
+  // ---- Share Tokens (Acompanhamento Público) ----
+  await knex.schema.createTable('share_tokens', (t) => {
+    t.text('id').primary();
+    t.text('student_id').references('id').inTable('students').onDelete('CASCADE').notNullable();
+    t.text('created_by').references('id').inTable('users').onDelete('SET NULL');
+    t.string('token', 64).notNullable().unique();
+    t.boolean('is_active').defaultTo(true);
+    t.timestamp('expires_at');
+    t.timestamps(true, true);
+  });
 }
 
 export async function down(knex: Knex): Promise<void> {
   const tables = [
-    'whatsapp_logs', 'refresh_tokens', 'daily_limits',
+    'share_tokens', 'whatsapp_logs', 'refresh_tokens', 'daily_limits',
     'transaction_payments', 'transaction_items', 'transactions',
     'cash_register_movements', 'cash_registers', 'stock_movements',
     'products', 'categories', 'facial_descriptors', 'cards',

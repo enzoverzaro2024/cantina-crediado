@@ -13,6 +13,7 @@ import GuardiansPage from './pages/admin/GuardiansPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import OnCreditPage from './pages/admin/OnCreditPage';
 import FiadoScannerPage from './pages/admin/FiadoScannerPage';
+import TrackPage from './pages/public/TrackPage';
 import ToastContainer from './components/common/Toast';
 
 const queryClient = new QueryClient({
@@ -53,6 +54,9 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+
+          {/* Public Track Page */}
+          <Route path="/track/:token" element={<TrackPage />} />
 
           {/* PDV */}
           <Route
