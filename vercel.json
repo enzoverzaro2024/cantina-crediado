@@ -8,5 +8,10 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "build": {
+    "env": {
+      "VITE_API_URL": "https://cantina-backend-crediado.onrender.com/api"
+    }
+  }
 }
