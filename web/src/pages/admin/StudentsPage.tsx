@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Search, Users as UsersIcon, CreditCard, Wallet, Plus, X, Save, Edit2, Trash2, ScanFace, Clock, ShieldCheck } from 'lucide-react';
+import { Search, Users as UsersIcon, CreditCard, Wallet, Plus, X, Save, Edit2, Trash2, ScanFace, Clock, ShieldCheck, Link2 } from 'lucide-react';
 import axios from 'axios';
-import { api, dailyLimitsApi } from '../../services/api';
+import { api, dailyLimitsApi, studentsApi } from '../../services/api';
 import { FacialCaptureModal } from '../../components/FacialCaptureModal';
 import './StudentsPage.css';
 
@@ -20,6 +20,7 @@ interface Student {
   cpf?: string;
   guardian_name?: string;
   phone?: string;
+  public_token?: string;
 }
 
 export default function StudentsPage() {
@@ -349,6 +350,19 @@ export default function StudentsPage() {
     }
   };
 
+  const handleCopyPublicLink = async (student: Student) => {
+    try {
+      const { data } = await studentsApi.generatePublicToken(student.id);
+      const token = data.data.token;
+      const fullUrl = `${window.location.origin}/aluno/${token}`;
+      await navigator.clipboard.writeText(fullUrl);
+      alert(`Link copiado!\n\n${fullUrl}`);
+    } catch (err: any) {
+      console.error('Erro ao gerar link:', err);
+      alert(err.response?.data?.error?.message || 'Erro ao gerar link público.');
+    }
+  };
+
   const changeField = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -573,6 +587,14 @@ export default function StudentsPage() {
                   title="Ver Extrato"
                 >
                   <Clock size={16} />
+                </button>
+                <button
+                  className="btn btn-ghost btn-sm"
+                  onClick={() => handleCopyPublicLink(s)}
+                  title="Copiar Link Público para o Pai"
+                  style={{ color: '#6366f1' }}
+                >
+                  <Link2 size={16} />
                 </button>
                 <button className="btn btn-outline" onClick={() => { /* cards modal */ }} title="Cartões">
                   <CreditCard size={16} /> Cartões

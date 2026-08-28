@@ -13,6 +13,7 @@ import GuardiansPage from './pages/admin/GuardiansPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import OnCreditPage from './pages/admin/OnCreditPage';
 import FiadoScannerPage from './pages/admin/FiadoScannerPage';
+import PublicStudentPage from './pages/public/PublicStudentPage';
 import ToastContainer from './components/common/Toast';
 
 const queryClient = new QueryClient({
@@ -53,6 +54,9 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+
+          {/* Portal Público do Aluno (sem autenticação) */}
+          <Route path="/aluno/:token" element={<PublicStudentPage />} />
 
           {/* PDV */}
           <Route

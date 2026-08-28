@@ -166,6 +166,10 @@ export const studentsApi = {
     api.post(`/students/${id}/balance`, data),
   updateMarketing: (id: string, isMarketingSent: boolean) =>
     api.put(`/students/${id}/marketing`, { isMarketingSent }),
+  generatePublicToken: (id: string) =>
+    api.post(`/students/${id}/public-token`),
+  regeneratePublicToken: (id: string) =>
+    api.post(`/students/${id}/public-token/regenerate`),
 };
 
 // ---- Daily Limits ----

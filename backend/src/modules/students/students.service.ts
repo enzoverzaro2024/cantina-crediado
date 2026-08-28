@@ -910,6 +910,56 @@ export class StudentsService {
   }
 
   /**
+   * Generate or return existing public token for a student.
+   */
+  async generatePublicToken(schoolId: string, studentId: string): Promise<{ token: string; url: string }> {
+    const student = await db('students')
+      .where({ id: studentId, school_id: schoolId })
+      .first();
+
+    if (!student) {
+      throw Errors.notFound('Aluno');
+    }
+
+    let token = student.public_token;
+
+    if (!token) {
+      token = crypto.randomUUID();
+      await db('students')
+        .where({ id: studentId })
+        .update({ public_token: token, updated_at: new Date() });
+    }
+
+    return {
+      token,
+      url: `/aluno/${token}`,
+    };
+  }
+
+  /**
+   * Regenerate public token for a student.
+   */
+  async regeneratePublicToken(schoolId: string, studentId: string): Promise<{ token: string; url: string }> {
+    const student = await db('students')
+      .where({ id: studentId, school_id: schoolId })
+      .first();
+
+    if (!student) {
+      throw Errors.notFound('Aluno');
+    }
+
+    const token = crypto.randomUUID();
+    await db('students')
+      .where({ id: studentId })
+      .update({ public_token: token, updated_at: new Date() });
+
+    return {
+      token,
+      url: `/aluno/${token}`,
+    };
+  }
+
+  /**
    * Update a student's marketing/divulgação status.
    */
   async updateMarketingStatus(schoolId: string, studentId: string, isMarketingSent: boolean): Promise<Record<string, any>> {

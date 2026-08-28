@@ -21,6 +21,7 @@ import { posRoutes } from './modules/pos/pos.routes';
 import { paymentsRoutes } from './modules/payments/payments.routes';
 import { facialRoutes } from './modules/facial/facial.routes';
 import { menuRoutes } from './modules/menu/menu.routes';
+import { publicRoutes } from './modules/public/public.routes';
 
 const app: express.Express = express();
 
@@ -94,6 +95,7 @@ app.use('/api/pos', posRoutes);
 app.use('/api/payments', paymentsRoutes);
 app.use('/api/facial', facialRoutes);
 app.use('/api/menu', menuRoutes);
+app.use('/api/public', publicRoutes);
 
 // ---- Static Web Frontend (if compiled) ----
 const webDistPath = path.join(__dirname, '../../web/dist');

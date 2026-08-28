@@ -98,4 +98,18 @@ router.get(
   studentsController.getTransactions.bind(studentsController)
 );
 
+router.post(
+  '/:id/public-token',
+  roleGuard('admin', 'manager'),
+  validateParams(studentIdParamSchema),
+  studentsController.generatePublicToken.bind(studentsController)
+);
+
+router.post(
+  '/:id/public-token/regenerate',
+  roleGuard('admin', 'manager'),
+  validateParams(studentIdParamSchema),
+  studentsController.regeneratePublicToken.bind(studentsController)
+);
+
 export { router as studentsRoutes };

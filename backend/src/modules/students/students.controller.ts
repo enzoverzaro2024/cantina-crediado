@@ -141,6 +141,26 @@ export class StudentsController {
       next(error);
     }
   }
+
+  /** POST /api/students/:id/public-token */
+  async generatePublicToken(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const result = await studentsService.generatePublicToken(req.user!.schoolId, req.params.id);
+      res.json({ success: true, data: result });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /** POST /api/students/:id/public-token/regenerate */
+  async regeneratePublicToken(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const result = await studentsService.regeneratePublicToken(req.user!.schoolId, req.params.id);
+      res.json({ success: true, data: result });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const studentsController = new StudentsController();
